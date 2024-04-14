@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+          #chartContainer  {
+    width: 100%;
+    padding: 20px;
+    background-color: var(--white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: auto;
+}
+        
+        #chartContainer .loader1 {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px; /* Fixed size or use percentage */
+            height: 50px; /* Ensure a circle shape */
+            animation: spin 2s linear infinite;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2; /* Ensure loader is above the canvas */
+        }
+        
+        canvas#timeSeriesChart {
+            display: block;
+            z-index: 1;
+            max-width: 100%;
+            max-height: 100%;
+            padding-bottom:10%;
+            padding-left: 5%;
+            padding-right:5%;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
+        
+        
+        
+<head>
+    <meta charset="UTF-8">
+    <title>Time Series Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+</head>
+<body>
+
+
+<div id="chartContainer" style="width: 100%; height: 100%; ">
+    <div class="p-4">Random data by day</div>
+    <div id="loader1" class="loader1"></div>
+    <canvas id="timeSeriesChart" style=""></canvas>
+</div>
+
+
+<script>
+
+async function fetchData() {
+    url=window.baseUrl;
+    document.getElementById('loader1').style.display = 'block'; // Show the spinner
+    const response = await fetch(url+'/chartdata');
+    const data = await response.json();
+    document.getElementById('loader1').style.display = 'none'; // Hide the spinner after data is fetched
+    return data.map(d => ({x: d.timestamp, y: d.value}));
+}
+
+
+function renderChart(data) {
+    const ctx = document.getElementById('timeSeriesChart').getContext('2d');
+
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'Monthly Sales',
+                data: data,
+                fill: false,
+                borderColor: '#007bff', // A crisp blue color for the line
+                backgroundColor: '#007bff', // Same color for the points
+                borderWidth: 2,
+                tension: 0.1, // Slightly smooth lines for a modern touch
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                pointBackgroundColor: '#ffffff', // White points
+                pointBorderColor: '#007bff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day'
+                    },
+                    grid: {
+                        display: false, // Hide x-axis grid lines for a cleaner look
+                        drawBorder: false, // Hide the x-axis border
+                    },
+                    ticks: {
+                        major: {
+                            enabled: true, // Highlight major ticks on the x-axis
+                        },
+                        color: '#333', // Dark gray color for better readability
+                    }
+                },
+                y: {
+                    grid: {
+                        drawBorder: false, // Hide the y-axis border
+                        color: '#ddd', // Light gray grid lines for minimalism
+                        zeroLineColor: '#ddd' // Light gray zero line
+                    },
+                    ticks: {
+                        beginAtZero: true,
+                        color: '#333', // Use a dark gray for tick labels for readability
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        color: '#444', // Darker text for readability
+                        boxWidth: 20, // Adjust legend box width
+                        padding: 15, // Space out the legend items
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent black for tooltips
+                    titleColor: '#ffffff', // White title text
+                    bodyColor: '#ffffff', // White body text
+                    borderColor: '#333', // Border color
+                    borderWidth: 1,
+                    cornerRadius: 0, // No rounded corners for a sharp, modern look
+                    titleMarginBottom: 10,
+                    xPadding: 10,
+                    yPadding: 10,
+                    displayColors: false, // Do not display the small color box in the tooltip
+                }
+            },
+            layout: {
+                padding: {
+                    top: 15,
+                    right: 15,
+                    bottom: 15,
+                    left: 15
+                }
+            }
+        }
+    });
+}
+
+
+fetchData().then(data => {
+    renderChart(data);
+});
+
+    </script>
+
+</body>
+</html>

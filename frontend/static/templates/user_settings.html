@@ -1,0 +1,80 @@
+
+        <div class="bg-white rounded p-4">
+        <h1 class="text-2xl">My settings</h1>
+        <br/>
+        <form id="usersettingsform" action="javascript:void(0);" method="post" enctype="multipart/form-data">
+
+
+            <h2 class="text-xl">General settings</h2><br/>
+            <label class="simple_text_input_label" for="address">Country</label><br>
+            <input class="simple_text_input" type="text" id="country" name="country" value="{{ country }}"><br><br>
+
+            <label class="simple_text_input_label" for="address">City</label><br>
+            <input class="simple_text_input" type="text" id="city" name="city" value="{{ city }}"><br><br>
+
+            <label class="simple_text_input_label" for="address">Address</label><br>
+            <input class="simple_text_input" type="text" id="address" name="address" value="{{ address }}"><br><br>
+
+       
+            <h2 class="text-xl">Email settings</h2><br/>
+            <label class="simple_text_input_label" for="address">Receive email notifications?</label><br>
+            
+            <label class="switch">
+                <input type="checkbox" value="1">
+                <span class="slider round"></span>
+              </label><br><br>
+
+
+            <br/>
+            <button class="simple_submit_button" type="submit">Save</button>
+
+
+        </form>
+
+                <!-- Add this at the top of your HTML body -->
+        <div id="simple_notification_bar" class="simple_notification_bar">
+            Settings saved successfully!
+        </div>
+        </div>
+
+
+    <script src="static/js/showNotification.js"></script>   
+    <script>
+        
+document.getElementById('usersettingsform').addEventListener('submit', async function(event) {
+    var formData = new FormData(event.target);
+    var settings = {};
+    formData.forEach(function(value, key) {
+        settings[key] = value;
+    });
+
+    console.log(settings);
+
+    try {
+        const response = await fetch('/save-user-settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+                // Include authentication headers if necessary
+            },
+            
+            body: JSON.stringify({ settings: settings }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            showNotification(data.message);
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'An error occurred');
+        }
+    } catch (error) {
+        console.error('Error saving settings:', error);
+        showNotification(error.message); // Display the error message in the notification bar
+    }
+});
+
+
+</script>
+
+        </script>

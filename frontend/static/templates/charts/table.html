@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Series Data Visualization</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-colresize-unofficial@latest/jquery.dataTables.colResize.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-colresize-unofficial@latest/jquery.dataTables.colResize.css">
+
+    <style>
+
+
+        #tableContainer .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px; /* Fixed size or use percentage */
+            height: 50px; /* Ensure a circle shape */
+            animation: spin 2s linear infinite;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2; /* Ensure loader is above the canvas */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--gray-dark);
+    background-color: var(--gray-light);
+    margin: 0;
+    padding: 0;
+}
+
+#tableContainer {
+    width: 100%;
+    padding: 20px;
+    background-color: var(--white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: auto;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    background-color: var(--white);
+    border-radius: 4px;
+}
+
+th {
+    background-color: var(--blue-dark);
+    color: var(--white);
+    text-align: left;
+    padding: 16px;
+    font-weight: normal;
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:nth-child(even) {
+    background-color: var(--blue-light);
+}
+
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    border: 1px solid var(--blue-medium);
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    border: 1px solid var(--blue-medium);
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
+    </style>
+</head>
+<body>
+
+
+<div id="tableContainer" class="mt-4">
+    <div class="p-4">Random data by day</div>
+    <div id="loader" class="loader"></div>
+    <table id="dataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+async function fetchData() {
+    // Mock data for demonstration, replace with your fetch logic
+    url=window.baseUrl;
+    document.getElementById('loader').style.display = 'block'; // Show the spinner
+    const response = await fetch(url+'/chartdata');
+    const data = await response.json();
+    document.getElementById('loader').style.display = 'none'; 
+    return data;
+}
+
+
+function renderTable(data) {
+    const table = $('#dataTable').DataTable({
+        data: data,
+        columns: [
+            { data: 'timestamp' },
+            { data: 'value' }
+        ],
+        scrollX: true,
+        scrollY: '200px',
+        colResize: {
+        isEnabled: true}
+         // Enables horizontal scrolling
+    });
+    table.colResize.enable();
+}
+
+fetchData().then(data => {
+
+    renderTable(data);
+});
+</script>
+
+</body>
+</html>

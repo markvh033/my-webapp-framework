@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Framework</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/output.css">
+    <link rel="stylesheet" href="static/css/base/main.css">
+    <link rel="stylesheet" href="static/css/base/buttons.css">
+    <link rel="stylesheet" href="static/css/base/formfields.css">
+    <link rel="stylesheet" href="static/css/base/notificationbar.css">
+    <link rel="stylesheet" href="static/css/base/messages.css">
+
+
+    
+   
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <script>
+      window.baseUrl = 'http://127.0.0.1:8000';
+      
+    </script>
+    <script src="static/js/globals.js"></script>
+
+ 
+
+</head>
+<body class="font-sans antialiased bg-gray-200 min-h-screen">
+
+
+
+  
+    {% include 'topnav.html' %}
+
+    {% include 'sidenav.html' %}
+
+    <div class="p-4 sm:ml-64">
+      <div class="p-4 mt-14">
+    
+    {% include content_template %}
+      
+  </div>
+</div>
+
+  
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+  </body>
+  </html>
+

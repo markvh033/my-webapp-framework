@@ -1,0 +1,28 @@
+/* Modern, minimal notification with animation */
+.simple_notification_bar {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text color */
+    position: fixed; /* Fixed at the top */
+    top: -50px; /* Start hidden above the page */
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center; /* Center the text horizontally */
+    z-index: 1000; /* Ensure it's above other elements */
+    transition: top 0.5s ease-in-out; /* Smooth transition for sliding in and out */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    font-size: 1rem; /* Adjust font size as needed */
+    font-weight: 600;
+}
+
+.simple_notification_bar.show {
+    top:0;
+}
+
+.simple_notification_bar.success {
+    background-color: #4CAF50; /* Green background for success */
+}
+
+.simple_notification_bar.error {
+    background-color: #f44336; /* Red background for error */
+}
